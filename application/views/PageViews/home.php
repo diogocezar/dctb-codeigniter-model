@@ -1,0 +1,2 @@
+<h2>Esta é a página Home</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum quae natus veniam est necessitatibus sit at itaque, quibusdam reprehenderit beatae eos suscipit autem maxime quidem nemo aperiam vero provident cupiditate?</p>
