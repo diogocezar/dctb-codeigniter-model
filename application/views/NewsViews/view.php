@@ -1,5 +1,5 @@
 <?php
-echo '<h2>'.$news_item['title'].'</h2>';
-echo $news_item['text'];
+echo '<h2>'.$news['title'].'</h2>';
+echo $news['text'];
 ?>
 <p><a href="../news/">Back</a></p>

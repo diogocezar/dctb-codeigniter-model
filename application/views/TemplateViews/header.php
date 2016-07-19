@@ -11,7 +11,15 @@
 			<li><a href="<?php echo site_url('/') ?>">Home</a></li>
 			<li><a href="<?php echo site_url('/about') ?>">About</a></li>
 			<li><a href="<?php echo site_url('/news') ?>">News</a></li>
-			<li><a href="<?php echo site_url('/news/create') ?>">News Create</a></li>
+			<?php
+			$logged = $this->session->get_userdata("logged");
+			if(isset($logged['logged']) && $logged['logged'] == 1){
+			?>
+				<li><a href="<?php echo site_url('/news/create') ?>">News Create</a></li>
+				<li><a href="<?php echo site_url('/login/logout') ?>">Logout</a></li>
+			<?php } else { ?>
+				<li><a href="<?php echo site_url('login') ?>">Login</a></li>
+			<?php } ?>
 		</ul>
 	</nav>
 	<h1>
