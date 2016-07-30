@@ -1,20 +1,30 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Login extends CI_Controller {
-    public function index(){
-		$this->load->view('LoginViews/login');
+
+class Login extends MY_Controller {
+
+    public function __construct(){
+    	$this->loginNeeded = false;
+    	parent::__construct();
+    	$this->load->model('UserModel');
+    	$this->replaces = Layout::get_login_layout();
     }
+
+    public function index(){
+    	parent::append_replace(array('title' => 'Login'));
+		parent::load_view_template('login/login');
+    }
+
     public function go(){
 		$user = $this->input->post("user");
-		$pass = sha1($this->input->post("pass"));
-		// TODO: Get from database
-		if ($user == "123456" && $pass == '7c4a8d09ca3762af61e59520943dc26494f8941b') {
+		$pass = $this->input->post("pass");
+		if($this->UserModel->check_login($user, $pass)){
 			$this->session->set_userdata("logged", 1);
 			redirect(base_url());
 		}
 		else{
-			$data['error'] = "Usuário/Senha incorretos";
-			$this->load->view("LoginViews/login", $data);
+			parent::append_replace(array('title' => 'Login', 'error' => 'Sorry, user and password not found.'));
+			parent::load_view_template('login/login');
 		}
     }
 	public function logout(){

@@ -49,9 +49,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+
+/* JavaScripts */
+$route['js/(:any)'] = 'js/$1';
+
+/* Assets */
+$route['assets/(:any)'] = 'assets/$1';
+
+/* Login */
 $route['login'] = 'login/index';
-$route['news/create'] = 'news/create';
-$route['news/(:any)'] = 'oracle/news/$1';
-$route['news'] = 'oracle/news';
+
+/* News Admin */
+$route['news/save']        = 'news/save';
+$route['news/add']         = 'news/add';
+$route['news/edit/(:any)'] = 'news/edit/$1';
+
+/* Users Admin */
+$route['user/save']        = 'user/save';
+$route['user/add']         = 'user/add';
+$route['user/edit/(:any)'] = 'user/edit/$1';
+$route['user/(:any)']      = 'user/detail/$1';
+$route['user']             = 'user';
+
+/* News Public */
+$route['news/(:any)'] = 'oracle/detail_news/$1';
+$route['news'] = 'oracle/list_news';
+
+/* Static Pages */
 $route['(:any)'] = 'pages/view/$1';
 $route['default_controller'] = 'pages/view';

@@ -1,52 +1,55 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 class News extends MY_Controller {
-        public function __construct(){
-			parent::__construct();
-			$this->load->model('NewsModel');
-        }
 
-        public function index(){
-			$data['news'] = $this->NewsModel->get_news();
-			$data['title'] = 'News archive';
+    public function __construct(){
+    	$this->loginNeeded = true;
+		parent::__construct();
+		$this->load->model('NewsModel');
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+    }
 
-			$this->load->view('TemplateViews/header', $data);
-			$this->load->view('NewsViews/index', $data);
-			$this->load->view('TemplateViews/footer');
-        }
+    public function add(){
+		parent::exec_form_replaces('Add news', '', Layout::get_news_layout());
+		parent::load_view_template('news/form');
+    }
 
-        public function view($slug = NULL){
-			$data['news_item'] = $this->NewsModel->get_news($slug);
+    public function edit($id){
+		$data['item'] = $this->NewsModel->get_by_id($id);
+		parent::exec_form_replaces('Edit news', '', Layout::get_news_layout($data['item']));
+		parent::load_view_template('news/form', $data);
+    }
 
-			if (empty($data['news_item'])){
-			        show_404();
-			}
+	public function save($id = FALSE){
+		$data              = array();
+		$validation_errors = FALSE;
 
-			$data['title'] = $data['news_item']['title'];
+		$this->form_validation->set_rules('title', 'Title', 'required');
+		$this->form_validation->set_rules('text', 'Text', 'required');
 
-			$this->load->view('TemplateViews/header', $data);
-			$this->load->view('NewsViews/view', $data);
-			$this->load->view('TemplateViews/footer');
-        }
-
-		public function create(){
-			$this->load->helper('form');
-			$this->load->library('form_validation');
-
-			$data['title'] = 'Create a news item';
-
-			$this->form_validation->set_rules('title', 'Title', 'required');
-			$this->form_validation->set_rules('text', 'Text', 'required');
-
-			if ($this->form_validation->run() === FALSE){
-			    $this->load->view('TemplateViews/header', $data);
-			    $this->load->view('NewsViews/create');
-			    $this->load->view('TemplateViews/footer');
-
+		if($this->form_validation->run() === FALSE){
+			$validation_errors = validation_errors();
+			if($id != FALSE){
+				$data['item'] = $this->NewsModel->get_by_id($id);
+				parent::exec_form_replaces('Edit news', $validation_errors, Layout::get_news_layout(($data['item'])));
 			}
 			else{
-			    $this->NewsModel->set_news();
-			    $this->load->view('NewsViews/success');
+				parent::exec_form_replaces('Save news', $validation_errors, Layout::get_news_layout());
 			}
+			parent::load_view_template('news/form', $data);
 		}
+		else{
+		    $this->NewsModel->save($id);
+		    parent::exec_form_replaces('Saved with success', $validation_errors, Layout::get_news_layout());
+		    parent::load_view_template('news/success');
+		}
+	}
+
+    public function delete($id){
+    	 $this->NewsModel->delete($id);
+    	 parent::append_replace(array('title' => 'Deleted with success'));
+    	 parent::load_view_template('news/success');
+    }
 }
